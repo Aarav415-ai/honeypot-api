@@ -14,6 +14,10 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY not found in .env")
 
+DEEPGRAM_KEY = os.getenv("DEEPGRAM_API_KEY")
+if not DEEPGRAM_KEY:
+    print("Warning: DEEPGRAM_KEY not set in environment variables")
+
 genai.configure(api_key=GEMINI_API_KEY)
 
 MODEL_NAME = "models/gemini-2.5-flash"  # valid from your list
@@ -126,6 +130,23 @@ class MessageOut(BaseModel):
 async def honeypot(msg: MessageIn):
     sid = msg.session_id
     text = (msg.text or "").strip()
+
+from fastapi.responses import StreamingResponse
+from io import BytesIO
+from gtts import gTTS  # we'll use gTTS as free fallback for now
+
+@app.get("/tts")
+async def tts(text: str):
+    if DEEPGRAM_KEY:
+        # Future: call Deepgram TTS here (paid)
+        pass
+    else:
+        # Free fallback using gTTS (Google Translate TTS)
+        tts = gTTS(text=text, lang='en', tld='co.in')  # Indian English accent
+        audio = BytesIO()
+        tts.write_to_fp(audio)
+        audio.seek(0)
+        return StreamingResponse(audio, media_type="audio/mpeg")
 
     if sid not in sessions:
         sessions[sid] = {
