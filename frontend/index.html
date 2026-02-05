@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>India Impact Buildathon - Problem 2</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-dark: #3b82f6;
+      --border: rgba(255,255,255,0.1);
+      --shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --border: rgba(0,0,0,0.08);
+      --shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px 16px;
+      min-height: 100vh;
+      transition: background 0.4s ease;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: all 0.4s ease;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin: 0 0 0.5rem;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+
+    .team {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 10;
+    }
+
+    .theme-toggle {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 8px 16px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateY(-1px);
+    }
+
+    .section {
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      padding: 1.6rem;
+      margin: 1.8rem 0;
+      border: 1px solid var(--border);
+    }
+
+    h3 {
+      margin: 0 0 1.2rem;
+      color: var(--accent);
+      font-size: 1.35rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 1.2rem;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+
+    .card-label {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-value {
+      font-size: 1.15rem;
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .json-section {
+      margin-top: 2.5rem;
+    }
+
+    pre {
+      background: #0f172a;
+      border-radius: 10px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: #c3e88d;
+      border: 1px solid #1e293b;
+    }
+
+    [data-theme="light"] pre {
+      background: #f1f5f9;
+      color: #1e293b;
+      border-color: #e2e8f0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 1.5rem; }
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toggle-container">
+    <button class="theme-toggle" id="themeToggle">
+      <span id="themeIcon">🌙</span> Dark Mode
+    </button>
+  </div>
+
+  <div class="container">
+    <header>
+      <h1>India Impact Buildathon - Problem 2</h1>
+      <p class="team">Sammit • Aarav • Maharth</p>
+    </header>
+
+    <div class="section">
+      <h3>Extracted Intelligence</h3>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">UPI IDs</div>
+          <div class="card-value" id="upi">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Bank Accounts</div>
+          <div class="card-value" id="bank">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">IFSC Codes</div>
+          <div class="card-value" id="ifsc">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Phone Numbers</div>
+          <div class="card-value" id="phones">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Emails</div>
+          <div class="card-value" id="emails">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Suspicious Links</div>
+          <div class="card-value" id="links">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section json-section">
+      <h3>Latest API Response (JSON)</h3>
+      <pre id="jsonOutput">Waiting for data from API...</pre>
+    </div>
+
+    <footer>
+      Real-time honeypot intelligence • Powered by Gemini 2.5 Flash • Updated live
+    </footer>
+  </div>
+
+  <script>
+    // CONFIG
+    const API_URL = "http://localhost:8000/honeypot";   // correct endpoint
+    const SESSION_ID = "dashboard-test-001";
+
+    // Theme toggle
+    const toggleBtn = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const html = document.documentElement;
+
+    function setTheme(theme) {
+      html.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme);
+      themeIcon.textContent = theme === "dark" ? "🌙" : "☀️";
+      toggleBtn.lastChild.textContent = theme === "dark" ? " Dark Mode" : " Light Mode";
+    }
+
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    setTheme(savedTheme);
+
+    toggleBtn.addEventListener("click", () => {
+      const current = html.getAttribute("data-theme");
+      setTheme(current === "dark" ? "light" : "dark");
+    });
+
+    // Fetch & Update
+    async function updateDashboard() {
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            session_id: SESSION_ID,
+            text: ""   // empty text = refresh current state (no new message added)
+          })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+
+        console.log("Dashboard received:", data); // debug log
+
+        document.getElementById("upi").textContent   = data.extracted.upi_ids?.join(", ")   || "—";
+        document.getElementById("bank").textContent  = data.extracted.bank_accounts?.join(", ") || "—";
+        document.getElementById("ifsc").textContent  = data.extracted.ifsc?.join(", ")     || "—";
+        document.getElementById("phones").textContent = data.extracted.phones?.join(", ")   || "—";
+        document.getElementById("emails").textContent = data.extracted.emails?.join(", ")   || "—";
+        document.getElementById("links").textContent  = data.extracted.phishing_links?.join(", ") || "—";
+
+        document.getElementById("jsonOutput").textContent = JSON.stringify(data, null, 2);
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("jsonOutput").textContent =
+          `Error loading data\n\n${err.message}\n\nCheck console or API status.`;
+      }
+    }
+
+    // Load immediately
+    updateDashboard();
+
+    // Refresh every 6 seconds
+    setInterval(updateDashboard, 6000);
+  </script>
+</body>
+</html>
