@@ -72,9 +72,11 @@
       top: 24px;
       right: 24px;
       z-index: 10;
+      display: flex;
+      gap: 10px;
     }
 
-    .theme-toggle {
+    .theme-toggle, .refresh-btn {
       background: rgba(255,255,255,0.1);
       border: 1px solid var(--border);
       border-radius: 50px;
@@ -88,7 +90,7 @@
       gap: 8px;
     }
 
-    .theme-toggle:hover {
+    .theme-toggle:hover, .refresh-btn:hover {
       background: rgba(255,255,255,0.15);
       transform: translateY(-1px);
     }
@@ -185,6 +187,7 @@
     <button class="theme-toggle" id="themeToggle">
       <span id="themeIcon">🌙</span> Dark Mode
     </button>
+    <button class="refresh-btn" onclick="updateDashboard()">Refresh Now</button>
   </div>
 
   <div class="container">
@@ -235,7 +238,7 @@
 
   <script>
     // CONFIG
-    const API_URL = "http://localhost:8000/honeypot";   // correct endpoint
+    const API_URL = "https://honeypot-api-6mx9.onrender.com/honeypot";
     const SESSION_ID = "dashboard-test-001";
 
     // Theme toggle
@@ -266,7 +269,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             session_id: SESSION_ID,
-            text: ""   // empty text = refresh current state (no new message added)
+            text: ""
           })
         });
 
@@ -274,7 +277,7 @@
 
         const data = await res.json();
 
-        console.log("Dashboard received:", data); // debug log
+        console.log("Dashboard received:", data);
 
         document.getElementById("upi").textContent   = data.extracted.upi_ids?.join(", ")   || "—";
         document.getElementById("bank").textContent  = data.extracted.bank_accounts?.join(", ") || "—";
@@ -286,16 +289,12 @@
         document.getElementById("jsonOutput").textContent = JSON.stringify(data, null, 2);
 
       } catch (err) {
-        console.error(err);
-        document.getElementById("jsonOutput").textContent =
-          `Error loading data\n\n${err.message}\n\nCheck console or API status.`;
+        console.error("Dashboard error:", err);
+        document.getElementById("jsonOutput").textContent = `Error: ${err.message}`;
       }
     }
 
-    // Load immediately
     updateDashboard();
-
-    // Refresh every 6 seconds
     setInterval(updateDashboard, 6000);
   </script>
 </body>
